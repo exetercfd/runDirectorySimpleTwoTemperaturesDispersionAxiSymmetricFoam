@@ -1,0 +1,115 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+// The vertices can be defined using variables Lx, Ly, Lz. It saves time to modify the size of the domain
+
+// boundary_layer =  [  2.50216694e-05   5.00433388e-05   1.00086678e-04   2.00173355e-04]
+// intermediate_layer =  [ 0.00497498  0.00494996  0.00489991  0.00479983]
+// upper_boundary_layer =  [ 0.00997498  0.00994996  0.00989991  0.00979983]
+
+// end_cell_first_layer = [ 0.0000043         ]
+// end_cell_first_layerx1.2 = [ 0.00000516          ]
+
+Lx 0.200;     // add the ends
+Lz 0.010;
+Dy1 2.50216694e-5;
+Dy2 0.005;
+Dy3 0.00997498;
+Dy4 0.01;
+
+
+
+
+
+vertices
+(
+(0 0 0)
+(0.004995 0.000218 0)
+(0.004995 0.000218 0.2) 
+(0 0 0.2)
+(0.004995 -0.000218 0) 
+(0.004995 -0.000218 0.2)
+);
+ 
+blocks
+(
+hex (0 4 1 0 3 5 2 3) 
+porosity (70 1 630) simpleGrading (0.017857 1 1)
+);
+ 
+edges
+(
+);
+ 
+boundary
+(
+     front
+     { 
+           type wedge;
+           faces  
+           (
+               (0 1 2 3)
+           );
+      }
+     back
+     { 
+           type wedge;
+           faces  
+           (
+               (0 3 5 4)
+           );
+      }
+     wall_upper
+     { 
+           type wall;
+           faces  
+           (
+               (1 4 5 2)
+           );
+      }
+     inlet
+     { 
+           type patch;
+           faces  
+           (
+               (0 4 1 0)
+           );
+      }
+     outlet
+     { 
+           type patch;
+           faces  
+           (
+               (3 5 2 3)
+           );
+      }
+     axis
+     { 
+           type empty;
+           faces  
+           (
+               (0 3 3 0)
+           );
+      }
+);
+ 
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
